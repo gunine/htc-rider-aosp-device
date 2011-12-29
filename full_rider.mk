@@ -33,15 +33,23 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 #TODO ---- What do we need to do to not use a static init & init.rc?
 PRODUCT_COPY_FILES += \
-    device/htc/rider/init:root/init \
-    device/htc/rider/init.rc:root/init.rc \
-    device/htc/rider/ueventd.rc:root/ueventd.rc \
+#    device/htc/rider/init:root/init \
+#    device/htc/rider/init.rc:root/init.rc \
+#    device/htc/rider/ueventd.rc:root/ueventd.rc \
     device/htc/rider/init.rider.rc:root/init.rider.rc \
     device/htc/rider/ueventd.rider.rc:root/ueventd.rider.rc
 
+#Using prebuilt audio libs right now
+PRODUCT_COPY_FILES += \
+    device/htc/rider/prebuilt/lib/hw/audio.primary.default.so:system/lib/hw/audio.primary.default.so \
+    device/htc/rider/prebuilt/lib/hw/audio_policy.default.so:system/lib/hw/audio_policy.default.so \
+    device/htc/rider/prebuilt/lib/hw/audio.a2dp.default.so:system/lib/hw/audio.a2dp.default.so
+
 #Add toushcreen config file
 PRODUCT_COPY_FILES += \
-    device/htc/rider/atmel-touchscreen.idc:system/usr/idc/atmel-touchscreen.idc
+    device/htc/rider/atmel-touchscreen.idc:system/usr/idc/atmel-touchscreen.idc \
+    device/htc/rider/atmel-touchscreen.kl:system/usr/keylayout/atmel-touchscreen.kl \
+    device/htc/rider/rider-keypad.idc:system/usr/idc/rider-keypad.idc
 
 ## (2) Also get non-open-source GSM-specific aspects if available
 $(call inherit-product-if-exists, vendor/htc/rider/rider-vendor.mk)
@@ -74,12 +82,12 @@ PRODUCT_PACKAGES += \
     librs_jni \
     libOmxVenc \
     libOmxVdec \
+    gralloc.msm8660 \
     com.android.future.usb.accessory
-#    gps.rider \
-#    librs_jni \
-#    gralloc.msm8660 \
-#    copybit.msm8660 \
+
 #    overlay.default \
+#    gps.rider \
+#    copybit.msm8660 \
 #    libOmxCore \
 #    libaudio \
 
@@ -156,11 +164,11 @@ PRODUCT_COPY_FILES += \
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-DEVICE_PACKAGE_OVERLAYS += device/htc/rider/overlay
+# DEVICE_PACKAGE_OVERLAYS += device/htc/rider/overlay
 
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
-	LOCAL_KERNEL := device/htc/rider/zImage
+	LOCAL_KERNEL := device/htc/rider/kernel
 else
 	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
@@ -177,7 +185,7 @@ $(call inherit-product, device/htc/rider/media_htcaudio.mk)
 # stuff common to all HTC phones
 $(call inherit-product, device/htc/common/common.mk)
 
-$(call inherit-product, build/target/product/full_base.mk)
+$(call inherit-product, build/target/product/full_base_telephony.mk)
 
 PRODUCT_NAME := full_rider
 PRODUCT_DEVICE := rider

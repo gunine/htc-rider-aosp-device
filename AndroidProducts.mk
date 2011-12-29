@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/rider.mk
+    $(LOCAL_DIR)/full_rider.mk
